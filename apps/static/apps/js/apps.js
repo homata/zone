@@ -210,3 +210,28 @@ map.on('load', function() {
         },
     });
 });*/
+
+
+// アイコンクリックイベント
+    map.on('click', "symbol_sample", function (e) {
+        var coordinates = e.lngLat;
+
+        // 属性設定
+        // var description = '<p>施設</p>';
+        var description = e.features[0].properties.title;
+
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+        new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(description)
+            .addTo(map);
+    });
+    //カーソルON,OFF
+    map.on('mouseenter', "symbol_sample", function () {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+    map.on('mouseleave', "symbol_sample", function () {
+        map.getCanvas().style.cursor = '';
+    });
