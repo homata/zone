@@ -25,14 +25,19 @@ $ python -V
 ```
 $ pip install django
 $ pip install django-environ
-$ pip install django-filter
 $ pip install django-extensions
+$ pip install markdown
+$ pip install gunicorn
 
-$ pip install djangorestframework
+$ pip install django-filter
+$ pip install django-debug-toolbar
 
 $ pip install dj-database-url
 $ pip install psycopg2-binary
 $ pip install django-cleanup
+
+$ pip install djangorestframework
+$ pip install djangorestframework-gis
 
 $ pip freeze > requirements.txt
 ```
