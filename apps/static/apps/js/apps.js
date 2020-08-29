@@ -138,39 +138,42 @@ map.on('load', function(){
 
 
 map.on('load', function() {
-    map.addLayer({
-        'id': 'points',
-        'type': 'symbol',
-        'source': {
-            'type': 'geojson',
-            'data': {
-                'type': 'FeatureCollection',
-                'features': [
-                    {
-                        'type': 'Feature',
-                        'geometry': {
-                            'type': 'Point',
-                            'coordinates':[139.796476,35.654716]
-                        },
-                        'properties': {
-                            'title': '豊洲駅',
-                            'icon': 'marker'
-                        }
-                    }
-                ]
+    // アイコン画像設定
+    map.loadImage('/static/apps/images/Map-Marker-PNG-File.png', function (error, res) {
+        map.addImage('sample', res);
+    });
+
+    // アイコン設定
+    map.addSource('symbol_sample', {
+        type: 'geojson',
+        data: {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [139.796476,35.654716]
+            },
+            'properties': {
+                'title': '豊洲駅',
             }
-        },
-        'layout': {
-            // get the icon name from the source's "icon" property
-            // concatenate the name to get an icon from the style's sprite sheet
-            'icon-image': ['concat', ['get', 'icon'], '-15'],
-            'icon-size': 1.5,
-            // get the title name from the source's "title" property
-            'text-field': ['get', 'title'],
-            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-            'text-offset': [0, 0.6],
-            'text-anchor': 'top'
         }
+    });
+
+    // スタイル設定
+    map.addLayer({
+        "id": "symbol_sample",
+        "type": "symbol",
+        "source": "symbol_sample",
+        "layout": {
+            "icon-image": "sample",
+            "icon-allow-overlap": true,
+            "icon-size": 0.05,
+           'text-field': ['get', 'title'],
+           //'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+           'text-offset': [0, 0.9],
+           'text-anchor': 'top',
+           //"text-size": 14
+        },
+        "paint": {}
     });
 });
 
