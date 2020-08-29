@@ -15,7 +15,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import include, path
+
+from django.conf.urls.static import static
+from django.conf import settings
+from django.views.i18n import JavaScriptCatalog
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
+    path('favicon\.ico', RedirectView.as_view(url='/static/images/favicon.ico')),
+
+    # apps (detection)
+    path('', include('apps.urls')),
+
+    # apis
+    path('api/v1.0/', include('apis.urls')),
 ]

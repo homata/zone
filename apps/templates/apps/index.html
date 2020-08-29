@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{# <!-- header ---> #}
+{% block extrahead %}
+{% endblock %}
+
+{# <!-- body ---> #}
+{% block content %}
+
+{# <!-- start: container ---> #}
+<div class="skin-blue">
+    <div class="wrapper">
+        Zone Apps
+    </div>
+</div>
+
+{% endblock %}
+
+{# <!-- body css ---> #}
+{% block css %}
+<link rel="stylesheet" href="{% static 'apps/css/apps.css' %}">
+{% endblock %}
+
+{#<!-- body javascript --->#}
+{% block js %}
+<script type="text/javascript" src="{% static 'apps/js/apps.js' %}"></script>
+{% endblock %}

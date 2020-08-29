@@ -89,6 +89,7 @@ Superuser created successfully.
 
 ```
 $ django-admin startapp apis
+$ django-admin startapp apps
 ```
 
 ### contrib

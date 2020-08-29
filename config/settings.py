@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apis.apps.ApisConfig',
+    'apps.apps.AppsConfig',
     'rest_framework',
 ]
 
@@ -181,10 +182,9 @@ STATICFILES_FINDERS = (
 
 # LOGGING
 # ------------------------------------------------------------------------------
-
 LOGGING_PATH = str(ROOT_DIR.path('logs'))
-LOGGING_FILE = 'app.log'
-LOGGING_API_FILE = 'api.log'
+LOGGING_FILE = 'apps.log'
+LOGGING_API_FILE = 'apis.log'
 
 if os.name == 'nt':
     LOGGING = {
@@ -208,7 +208,7 @@ if os.name == 'nt':
             },
         },
         'loggers': {
-            'common': {  # commandという名前のloggerを定義
+            'apps': {  # appsという名前のloggerを定義
                 'handlers': ['console'],
                 'level': 'DEBUG',
             },
@@ -216,7 +216,7 @@ if os.name == 'nt':
                 'handlers': ['console'],
                 'level': 'DEBUG',
             },
-            'api': {  # detectionという名前のloggerを定義
+            'apis': {  # apisという名前のloggerを定義
                 'handlers': ['console'],
                 'level': 'DEBUG',
             },
@@ -277,15 +277,15 @@ else:
             }
         },
         'loggers': {
-            'common': {  # commandという名前のloggerを定義
-                'handlers': ['file_time_rotation', 'console' ],
+            'apps': {  # appsという名前のloggerを定義
+                'handlers': ['file_time_rotation', 'console'],
                 'level': 'DEBUG',
             },
             'file': {  # fileという名前のloggerを定義
                 'handlers': ['file_time_rotation'],
                 'level': 'DEBUG',
             },
-            'api': {  # detectionという名前のloggerを定義
+            'apis': {  # apisという名前のloggerを定義
                 'handlers': ['file_time_rotation_api', 'console'],
                 'level': 'DEBUG',
             },
