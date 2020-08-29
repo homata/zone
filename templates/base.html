@@ -43,8 +43,8 @@
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
     {# <!-- apps --> #}
-    <link href={% static 'css/apps.css' %} rel="stylesheet">
-    <script src={% static 'js/apps.js' %}></script>
+    <link href={% static 'css/main.css' %} rel="stylesheet">
+    <script src={% static 'js/main.js' %}></script>
 
     {% block extrahead %}{% endblock %}
   </head>
@@ -52,7 +52,7 @@
     {% block content %}{% endblock %}
 
     {# csrf_token #}
-    <script type="text/javascript" src="{% static 'js/csrf_token.js' %}"></script>
+{#    <script type="text/javascript" src="{% static 'js/csrf_token.js' %}"></script>#}
 
 {% comment %}
     {# <!-- jQuery 3.2.1 --> #}
