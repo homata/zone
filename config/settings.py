@@ -335,3 +335,7 @@ if os.name == 'nt':
     os.environ['GDAL_LIBRARY_PATH'] = OSGEO4W + r"\bin"
     os.environ['GEOS_LIBRARY_PATH'] = OSGEO4W + r"\bin"
     os.environ['PATH'] = OSGEO4W + r"\bin;" + POSTGRES + r"\bin;" + os.environ['PATH']
+
+# Mapbox
+# ------------------------------------------------------------------------------
+MAPBOX_ACCESS_TOKEN = os.environ['MAPBOX_ACCESS_TOKEN'].strip()

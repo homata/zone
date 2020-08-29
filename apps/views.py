@@ -11,6 +11,8 @@ import os
 import traceback
 import json
 
+import config.settings as settings
+
 #-----------------------------------
 import logging
 logger = logging.getLogger('apps')
@@ -29,6 +31,8 @@ def index(request):
         # 現在ログインしている?
         if request.user.is_authenticated:
             contexts['user'] = {"username": request.user.username, "user_id": request.user.id, "is_authenticated": True}
+
+        contexts["mapbox_access_token"] = settings.MAPBOX_ACCESS_TOKEN
 
         return render(request, 'apps/index.html',contexts)
 
