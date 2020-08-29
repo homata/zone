@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# private add
+.zone/
+.idea/
+0*.*/
+logs/
