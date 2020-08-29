@@ -127,13 +127,43 @@ def area_search(lon, lat):
         result = rows[0]
         result["status"] = True
 
+        szone = result["szone"]
+        population = get_population(szone)
+        result["population"] = population
+
     except Exception as e:
         logger.error("area_search = {}".format(e))
         result = {
             "status": False,
             "cityname": "",
             "jiscode": 0,
-            "szone": 0
+            "szone": 0,
+            "population": 0
         }
 
     return result
+
+
+# -----------------------------------------
+def get_population(szone):
+
+    try:
+        population = 0
+        kcode = int(szone / 10)  # 小ゾーン -> 計画基本ゾーン
+
+        sql = "select * from area.population where kcode=%d" % (kcode)
+        rows = executeSql(sql)
+        if len(rows) <= 0:
+            raise Exception("population not found")
+
+        result = rows[0]
+        dt_now = datetime.now()
+        hour = dt_now.hour
+
+        str_now = "t%d" % (hour)
+        population = result[str_now]
+
+    except Exception as e:
+        logger.error("get_population = {}".format(e))
+
+    return population
