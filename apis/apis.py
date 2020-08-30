@@ -9,6 +9,7 @@ from datetime import timedelta
 import os
 import csv
 import json
+import codecs
 import traceback
 
 import config.settings as settings
@@ -225,3 +226,102 @@ class getPlaceSpotsAPIView(APIView):
             response = Response(result, status=status.HTTP_404_NOT_FOUND)
 
         return response
+
+
+#-----------------------------------------
+def read_json(filename):
+    """
+    JSONファイル読み込む
+    """
+    try:
+        basedir = os.path.dirname(os.path.abspath(__file__))
+        indir = os.path.join(basedir, "data")
+        readfilename = os.path.join(indir, filename)
+
+        with codecs.open(readfilename, 'r', "utf-8") as f:
+            jsonData = json.loads(f.read())
+
+    except IOError as e:
+        traceback.print_exc()
+        raise Exception(str(e))
+
+    return jsonData
+
+# -----------------------------------------
+import pandas as pd
+
+class getAreaSzoneAPIView(APIView):
+    """
+    小地域のGeoJson取得
+    """
+
+    def get(self, request, *args, **keywords):
+        logger.debug("apis:area_szone")
+
+        try:
+            sql = "select * from area.population"
+            population_list = executeSql(sql)
+            if len(population_list) <= 0:
+                raise Exception("population not found")
+
+            # DataFrameに変換
+            df_population = pd.DataFrame(population_list)
+            # print(df_population.head())
+            # print(df_population.info())
+
+            dt_now = datetime.now()
+            hour = dt_now.hour
+            str_now = "t%d" % (hour)
+
+            json_szone = read_json("szone.geojson")
+
+            features = json_szone["features"]
+            for feature in features:
+                population = 0
+
+                szone = feature["properties"]["szone"]
+                kcode = int(szone / 10)  # 小ゾーン -> 計画基本ゾーン
+
+                df_population_one = df_population[(df_population["kcode"] == kcode)]
+                if len(df_population_one) > 0:
+                    population = df_population_one.iloc[0][str_now]
+
+                feature["properties"]["population"] = population
+
+            result = json_szone
+            response = Response(result, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            traceback.print_exc()
+            logger.error("apis:area_szone: {}".format(e))
+            result = {"message": "ng"}
+            response = Response(result, status=status.HTTP_404_NOT_FOUND)
+
+        return response
+
+
+# -----------------------------------------
+def get_population_from_table(szone):
+
+    try:
+        population = 0
+        kcode = int(szone / 10)  # 小ゾーン -> 計画基本ゾーン
+
+        sql = "select * from area.population where kcode=%d" % (kcode)
+        rows = executeSql(sql)
+        if len(rows) <= 0:
+            raise Exception("population not found")
+
+        result = rows[0]
+        dt_now = datetime.now()
+        hour = dt_now.hour
+
+        str_now = "t%d" % (hour)
+        population = result[str_now]
+
+    except Exception as e:
+        logger.error("get_population = {}".format(e))
+
+    return population
+
+
