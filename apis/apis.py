@@ -12,7 +12,7 @@ import json
 import traceback
 
 import config.settings as settings
-
+import requests
 
 #-----------------------------------
 import logging
@@ -26,8 +26,8 @@ class getZonePopulationAPIView(APIView):
     """
 
     def get(self, request, *args, **keywords):
-        lon = float(request.GET.get('lon', "0,0"))
-        lat = float(request.GET.get('lat', "0,0"))
+        lon = float(request.GET.get('lon', "0.0"))
+        lat = float(request.GET.get('lat', "0.0"))
 
         logger.debug("apis:zone_population; lat={}, lon={}".format(lat,lon))
         try:
@@ -36,7 +36,7 @@ class getZonePopulationAPIView(APIView):
 
         except Exception as e:
             traceback.print_exc()
-            logger.error("zone_population_view: {}".format(e))
+            logger.error("apis:zone_population: {}".format(e))
             result = {"message": "ng"}
             response = Response(result, status=status.HTTP_404_NOT_FOUND)
 
@@ -167,3 +167,61 @@ def get_population(szone):
         logger.error("get_population = {}".format(e))
 
     return population
+
+
+# -----------------------------------------
+class getPlaceSpotsAPIView(APIView):
+    """
+    近くの減点スポット一覧
+    """
+
+    def get(self, request, *args, **keywords):
+        lon = float(request.GET.get('lon', "0.0"))
+        lat = float(request.GET.get('lat', "0.0"))
+
+        logger.debug("apis:place_spots")
+
+        try:
+            url = "https://o3e0b9l5cc.execute-api.ap-northeast-1.amazonaws.com/production/place/spots?lat={}&long={}".format(lat,lon)
+            request_result = requests.get(url)
+
+            json_data = json.loads(request_result.text)
+
+            features = []
+            for row in json_data:
+                poi_lon = float(row["long"])
+                poi_lat = float(row["lat"])
+
+                feature = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [poi_lon, poi_lat]
+                    },
+                    'properties': {
+                        "id": row["id"],
+                        "name": row["name"],
+                        "address": row["address"],
+                        "lat": poi_lat,
+                        "long": poi_lon,
+                        "tag": row["tag"],
+                        "message": row["message"]
+                    }
+                }
+                features.append(feature)
+
+            result = {
+                "type": "FeatureCollection",
+                "name": "plase_spot",
+                "crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:OGC:1.3:CRS84"}},
+                "features": features
+            }
+            response = Response(result, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            traceback.print_exc()
+            logger.error("apis:place_spots: {}".format(e))
+            result = {"message": "ng"}
+            response = Response(result, status=status.HTTP_404_NOT_FOUND)
+
+        return response
