@@ -133,3 +133,4 @@ dmypy.json
 .idea/
 0*.*/
 logs/
+contrib/node_modules/
